@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DemoScreenEffects : MonoBehaviour
@@ -32,7 +31,7 @@ public class DemoScreenEffects : MonoBehaviour
 
     public void DemoTileScreenDiagonally()
     {
-        ScreenEffects.DiagonalTiling(demoDiag_col, demoDiag_iNumRows, demoDiag_fDelay, demoDiag_bIsLeft, demoDiag_bIsBottom, this);
+        ScreenEffects.DiagonalTiling(demoDiag_col, demoDiag_iNumRows, demoDiag_fDelay, this, demoDiag_bIsLeft, demoDiag_bIsBottom);
     }
 
     //==============================
@@ -50,7 +49,7 @@ public class DemoScreenEffects : MonoBehaviour
 
     public void DemoHorizontalBanners()
     {
-        ScreenEffects.HorizontalBanners(demoHorBan_col, demoHorBan_iNumBan, demoHorBan_fDelay, demoHorBan_fAcrossTime, demoHorBan_bIsLeft, demoHorBan_bIsEntering, demoHorBan_bIsTop, this, null, demoHorBan_animCurve);
+        ScreenEffects.HorizontalBanners(demoHorBan_col, demoHorBan_iNumBan, demoHorBan_fDelay, demoHorBan_fAcrossTime, this, demoHorBan_bIsLeft, demoHorBan_bIsEntering, demoHorBan_bIsTop, null, demoHorBan_animCurve);
     }
 
     //==============================
@@ -68,7 +67,7 @@ public class DemoScreenEffects : MonoBehaviour
 
     public void DemoVerticalBanners()
     {
-        ScreenEffects.VerticalBanners(demoVerBan_col, demoVerBan_iNumBan, demoVerBan_fDelay, demoVerBan_fAcrossTime, demoVerBan_bIsLeft, demoVerBan_bIsEntering, demoVerBan_bIsTop, this, null, demoVerBan_animCurve);
+        ScreenEffects.VerticalBanners(demoVerBan_col, demoVerBan_iNumBan, demoVerBan_fDelay, demoVerBan_fAcrossTime, this, demoVerBan_bIsLeft, demoVerBan_bIsEntering, demoVerBan_bIsTop, null, demoVerBan_animCurve);
     }
 
     //==============================
@@ -84,7 +83,7 @@ public class DemoScreenEffects : MonoBehaviour
 
     public void DemoBars()
     {
-        ScreenEffects.Bars(demoBar_fTime, demoBar_bIsHorizontal, demoBar_bIsEntering, demoBar_fProportion, demoBar_col, this, null, demoBar_animCurve);
+        ScreenEffects.Bars(demoBar_col, demoBar_fTime, demoBar_fProportion, this, demoBar_bIsHorizontal, demoBar_bIsEntering, null, demoBar_animCurve);
     }
 
     //==============================
@@ -100,12 +99,13 @@ public class DemoScreenEffects : MonoBehaviour
 
     public void DemoKeyhole()
     {
-        ScreenEffects.Keyhole(demoKey_keyhole, demoKey_target, demoKey_fTime, demoKey_bIsEntering, demoKey_Col, demoKey_anim, this);
+        ScreenEffects.Keyhole(demoKey_keyhole, demoKey_target, demoKey_Col, demoKey_fTime, demoKey_anim, this, demoKey_bIsEntering);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             StartCoroutine(Showcase());
         }
     }
@@ -116,15 +116,15 @@ public class DemoScreenEffects : MonoBehaviour
 
         yield return new WaitForSeconds(2);
 
-        ScreenEffects.Keyhole(demoKey_keyhole, demoKey_target, demoKey_fTime, false, demoKey_Col, demoKey_anim, this);
+        ScreenEffects.Keyhole(demoKey_keyhole, demoKey_target, demoKey_Col, demoKey_fTime, demoKey_anim, this, false);
 
         yield return new WaitForSeconds(1.7f);
 
-        ScreenEffects.DiagonalTiling(demoDiag_col, demoDiag_iNumRows, demoDiag_fDelay, true, false, this);
+        ScreenEffects.DiagonalTiling(demoDiag_col, demoDiag_iNumRows, demoDiag_fDelay, this, true, false);
 
         yield return new WaitForSeconds(2.2f);
 
-        ScreenEffects.HorizontalBanners(demoHorBan_col, demoHorBan_iNumBan, demoHorBan_fDelay, demoHorBan_fAcrossTime, demoHorBan_bIsLeft, false, demoHorBan_bIsTop, this, null, demoHorBan_animCurve);
+        ScreenEffects.HorizontalBanners(demoHorBan_col, demoHorBan_iNumBan, demoHorBan_fDelay, demoHorBan_fAcrossTime, this, demoHorBan_bIsLeft, false, demoHorBan_bIsTop, null, demoHorBan_animCurve);
 
         yield return new WaitForSeconds(2);
 
@@ -132,26 +132,26 @@ public class DemoScreenEffects : MonoBehaviour
 
         yield return new WaitForSeconds(2);
 
-        ScreenEffects.VerticalBanners(demoVerBan_col, demoVerBan_iNumBan, demoVerBan_fDelay, demoVerBan_fAcrossTime, demoVerBan_bIsLeft, false, demoVerBan_bIsTop, this, null, demoVerBan_animCurve);
+        ScreenEffects.VerticalBanners(demoVerBan_col, demoVerBan_iNumBan, demoVerBan_fDelay, demoVerBan_fAcrossTime, this, demoVerBan_bIsLeft, false, demoVerBan_bIsTop, null, demoVerBan_animCurve);
 
         yield return new WaitForSeconds(2);
 
-        ScreenEffects.HorizontalBanners(demoHorBan_col, demoHorBan_iNumBan, demoHorBan_fDelay, demoHorBan_fAcrossTime, false, true, demoHorBan_bIsTop, this, null, demoHorBan_animCurve);
+        ScreenEffects.HorizontalBanners(demoHorBan_col, demoHorBan_iNumBan, demoHorBan_fDelay, demoHorBan_fAcrossTime, this, false, true, demoHorBan_bIsTop, null, demoHorBan_animCurve);
 
         yield return new WaitForSeconds(2);
 
-        ScreenEffects.VerticalBanners(demoVerBan_col, demoVerBan_iNumBan, demoVerBan_fDelay, demoVerBan_fAcrossTime, demoVerBan_bIsLeft, false, false, this, null, demoVerBan_animCurve);
+        ScreenEffects.VerticalBanners(demoVerBan_col, demoVerBan_iNumBan, demoVerBan_fDelay, demoVerBan_fAcrossTime, this, demoVerBan_bIsLeft, false, false, null, demoVerBan_animCurve);
 
         yield return new WaitForSeconds(2);
 
-        ScreenEffects.Bars(demoBar_fTime, demoBar_bIsHorizontal, demoBar_bIsEntering, demoBar_fProportion, demoBar_col, this, null, demoBar_animCurve);
+        ScreenEffects.Bars(demoBar_col, demoBar_fTime, demoBar_fProportion, this, demoBar_bIsHorizontal, demoBar_bIsEntering, null, demoBar_animCurve);
 
         yield return new WaitForSeconds(1f);
 
-        ScreenEffects.Bars(demoBar_fTime, demoBar_bIsHorizontal, false, demoBar_fProportion, demoBar_col, this, null, demoBar_animCurve);
+        ScreenEffects.Bars(demoBar_col, demoBar_fTime, demoBar_fProportion, this, demoBar_bIsHorizontal, false, null, demoBar_animCurve);
 
         yield return new WaitForSeconds(1f);
 
-        ScreenEffects.Keyhole(demoKey_keyhole, demoKey_target, demoKey_fTime, true, demoKey_Col, demoKey_anim, this);
+        ScreenEffects.Keyhole(demoKey_keyhole, demoKey_target, demoKey_Col, demoKey_fTime, demoKey_anim, this, true);
     }
 }

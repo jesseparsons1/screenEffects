@@ -40,25 +40,11 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator EnterEffect(RawImage rawImage)
-    {
-        float elapsedTime = 0f;
-        while (elapsedTime < 0.3f)
-        {
-            rawImage.rectTransform.localScale = Vector2.Lerp(Vector2.zero, Vector2.one, elapsedTime / 0.3f);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        rawImage.rectTransform.localScale = Vector2.one;
-    }
-
     //==============================
     //AXIAL TILING
     //==============================
 
-
-    public static void AxialTiling(Color colorTint, int numberOfRows, float betweenTileDelay,  MonoBehaviour runOnInstance, bool fillColumnsFirst = false, bool startLeft = false, bool startBottom = false, RawImage tilePrefab = null)
+    public static void AxialTiling(Color colorTint, int numberOfRows, float betweenTileDelay,  MonoBehaviour runOnInstance, bool fillColumnsFirst = false, bool startLeft = true, bool startBottom = true, RawImage tilePrefab = null)
     {
         if (!effectActive)
         {
@@ -66,7 +52,7 @@ public class ScreenEffects : MonoBehaviour
             Clear();
             effectActive = true;
             currentlyRunningEffectOnInstance = runOnInstance;
-            runOnInstance.StartCoroutine(AxialTilingCor(tilePrefab, colorTint, numberOfRows, fillColumnsFirst, betweenTileDelay, startLeft, startBottom, runOnInstance));
+            runOnInstance.StartCoroutine(AxialTilingCor(colorTint, numberOfRows, betweenTileDelay, runOnInstance, fillColumnsFirst, startLeft, startBottom, tilePrefab));
         }
         else
         {
@@ -74,7 +60,7 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator AxialTilingCor(RawImage tilePrefab, Color colorTint, int numberOfRows, bool fillColumnsFirst, float betweenTileDelay, bool startLeft, bool startBottom, MonoBehaviour runOnInstance)
+    private static IEnumerator AxialTilingCor(Color colorTint, int numberOfRows, float betweenTileDelay, MonoBehaviour runOnInstance, bool fillColumnsFirst, bool startLeft, bool startBottom, RawImage tilePrefab)
     {
         //Get screen extents
         Vector2 extents = new Vector2(targetCanvas.pixelRect.width, targetCanvas.pixelRect.height);
@@ -151,7 +137,7 @@ public class ScreenEffects : MonoBehaviour
     //DIAGONAL TILING
     //==============================
 
-    public static void DiagonalTiling(Color colorTint, int numberOfRows, float betweenTileDelay, bool startLeft, bool startBottom, MonoBehaviour runOnInstance, RawImage tilePrefab = null)
+    public static void DiagonalTiling(Color colorTint, int numberOfRows, float betweenTileDelay, MonoBehaviour runOnInstance, bool startLeft = true, bool startBottom = true, RawImage tilePrefab = null)
     {
         if (!effectActive)
         {
@@ -159,7 +145,7 @@ public class ScreenEffects : MonoBehaviour
             Initialise();
             Clear();
             effectActive = true;
-            runOnInstance.StartCoroutine(DiagonalTilingCor(tilePrefab, colorTint, numberOfRows, betweenTileDelay, startLeft, startBottom, runOnInstance));
+            runOnInstance.StartCoroutine(DiagonalTilingCor(colorTint, numberOfRows, betweenTileDelay, runOnInstance, startLeft, startBottom, tilePrefab));
         }
         else
         {
@@ -167,7 +153,7 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator DiagonalTilingCor(RawImage tilePrefab, Color colorTint, int numberOfRows, float betweenTileDelay, bool startLeft, bool startBottom, MonoBehaviour runOnInstance)
+    private static IEnumerator DiagonalTilingCor(Color colorTint, int numberOfRows, float betweenTileDelay, MonoBehaviour runOnInstance, bool startLeft, bool startBottom, RawImage tilePrefab)
     {
         //Get screen extents
         Vector2 extents = new Vector2(targetCanvas.pixelRect.width, targetCanvas.pixelRect.height);
@@ -207,6 +193,7 @@ public class ScreenEffects : MonoBehaviour
             //Make sure active
             newImage.gameObject.SetActive(true);
 
+            //Get i'th diagonal coord
             Vector2Int diagonalCoord = diagonalCoords[i];
 
             //Shift to start from (0, 0), steps measured in units of tileWidth/2
@@ -236,7 +223,7 @@ public class ScreenEffects : MonoBehaviour
     //HORIZONTAL BANNERS
     //==============================
 
-    public static void HorizontalBanners(Color colorTint, int numberOfBanners, float delayBetweenBanners, float time, bool startLeft, bool entering, bool startTop, MonoBehaviour runOnInstance, RawImage bannerPrefab = null, AnimationCurve animCurve = null)
+    public static void HorizontalBanners(Color colorTint, int numberOfBanners, float delayBetweenBanners, float acrossTimeForOneBanner, MonoBehaviour runOnInstance, bool startLeft = true, bool entering = true, bool startTop = false, RawImage bannerPrefab = null, AnimationCurve animCurve = null)
     {
         if (!effectActive)
         {
@@ -244,7 +231,7 @@ public class ScreenEffects : MonoBehaviour
             Initialise();
             Clear();
             effectActive = true;
-            runOnInstance.StartCoroutine(HorizontalBannersCor(bannerPrefab, colorTint, numberOfBanners, delayBetweenBanners, time, startLeft, entering, startTop, animCurve));
+            runOnInstance.StartCoroutine(HorizontalBannersCor(colorTint, numberOfBanners, delayBetweenBanners, acrossTimeForOneBanner, startLeft, entering, startTop, bannerPrefab, animCurve));
         }
         else
         {
@@ -252,7 +239,7 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator HorizontalBannersCor(RawImage bannerPrefab, Color colorTint, int numberOfBanners, float delayBetweenBanners, float acrossTimeForOneBanner, bool startLeft, bool entering, bool startTop, AnimationCurve animCurve = null)
+    private static IEnumerator HorizontalBannersCor(Color colorTint, int numberOfBanners, float delayBetweenBanners, float acrossTimeForOneBanner, bool startLeft, bool entering, bool startTop, RawImage bannerPrefab, AnimationCurve animCurve = null)
     {
         //Get screen extents
         Vector2 extents = new Vector2(targetCanvas.pixelRect.width, targetCanvas.pixelRect.height);
@@ -294,8 +281,6 @@ public class ScreenEffects : MonoBehaviour
 
             //Make sure active
             newImage.gameObject.SetActive(true);
-
-            
 
             //Set initial position
             if (entering)
@@ -386,7 +371,7 @@ public class ScreenEffects : MonoBehaviour
     //VERTICAL BANNERS
     //==============================
 
-    public static void VerticalBanners(Color colorTint, int numberOfBanners, float delayBetweenBanners, float time, bool startTop, bool entering, bool startLeft, MonoBehaviour runOnInstance, RawImage bannerPrefab = null, AnimationCurve animCurve = null)
+    public static void VerticalBanners(Color colorTint, int numberOfBanners, float delayBetweenBanners, float acrossTimeForOneBanner, MonoBehaviour runOnInstance, bool startTop = true, bool isEntering = true, bool startLeft = true, RawImage bannerPrefab = null, AnimationCurve animCurve = null)
     {
         if (!effectActive)
         {
@@ -394,7 +379,7 @@ public class ScreenEffects : MonoBehaviour
             Initialise();
             Clear();
             effectActive = true;
-            runOnInstance.StartCoroutine(VerticalBannersCor(bannerPrefab, colorTint, numberOfBanners, delayBetweenBanners, time, startTop, entering, startLeft, animCurve));
+            runOnInstance.StartCoroutine(VerticalBannersCor(colorTint, numberOfBanners, delayBetweenBanners, acrossTimeForOneBanner, startTop, isEntering, startLeft, bannerPrefab, animCurve));
         }
         else
         {
@@ -402,7 +387,7 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator VerticalBannersCor(RawImage bannerPrefab, Color colorTint, int numberOfBanners, float delayBetweenBanners, float acrossTimeForOneBanner, bool startTop, bool entering, bool startLeft, AnimationCurve animCurve = null)
+    private static IEnumerator VerticalBannersCor(Color colorTint, int numberOfBanners, float delayBetweenBanners, float acrossTimeForOneBanner, bool startTop, bool isEntering, bool startLeft, RawImage bannerPrefab, AnimationCurve animCurve = null)
     {
         //Get screen extents
         Vector2 extents = new Vector2(targetCanvas.pixelRect.width, targetCanvas.pixelRect.height);
@@ -446,7 +431,7 @@ public class ScreenEffects : MonoBehaviour
             newImage.gameObject.SetActive(true);
 
             //Set initial position
-            if (entering)
+            if (isEntering)
             {
                 Vector2 initialPos = new Vector2(startLeft ? (i * bannerWidth) : (extents.x - (i * bannerWidth)), startTop ? extents.y : 0);
                 newImage.rectTransform.position = initialPos;
@@ -468,7 +453,6 @@ public class ScreenEffects : MonoBehaviour
 
         //Add first banner to moving banners
         movingBanners.Add(allBanners[0]);
-        
 
         float elapsedTime = 0f;
         int previousMult = 0;
@@ -514,7 +498,7 @@ public class ScreenEffects : MonoBehaviour
         //Set final positions
         foreach (RawImage image in movingBanners)
         {
-            if (!entering)
+            if (!isEntering)
             {
                 image.rectTransform.position = new Vector2(image.rectTransform.position.x, startTop ? extents.y : 0);
             }
@@ -532,7 +516,7 @@ public class ScreenEffects : MonoBehaviour
     //BARS
     //==============================
 
-    public static void Bars(float time, bool horizontal, bool entering, float canvasProportionCovered, Color colorTint, MonoBehaviour runOnInstance, RawImage barPrefab = null, AnimationCurve animCurve = null)
+    public static void Bars(Color colorTint, float time, float canvasProportionCovered, MonoBehaviour runOnInstance, bool isHorizontal = true, bool isEntering = true, RawImage barPrefab = null, AnimationCurve animCurve = null)
     {
         if (!effectActive)
         {
@@ -540,7 +524,7 @@ public class ScreenEffects : MonoBehaviour
             Initialise();
             Clear();
             effectActive = true;
-            runOnInstance.StartCoroutine(BarsCor(barPrefab, time, horizontal, entering, canvasProportionCovered, colorTint, animCurve));
+            runOnInstance.StartCoroutine(BarsCor(colorTint, time, canvasProportionCovered, isHorizontal, isEntering, barPrefab, animCurve));
         }
         else
         {
@@ -548,7 +532,7 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator BarsCor(RawImage barPrefab, float time, bool horizontal, bool entering, float canvasProportionCovered, Color colorTint, AnimationCurve animCurve = null)
+    private static IEnumerator BarsCor(Color colorTint, float time, float canvasProportionCovered, bool isHorizontal, bool isEntering, RawImage barPrefab, AnimationCurve animCurve = null)
     {
         //Play SFX here
 
@@ -565,7 +549,7 @@ public class ScreenEffects : MonoBehaviour
         SetImageColor(barPrefab, colorTint);
         SetImageSize(barPrefab, extents.x, extents.y);
         SetImageAnchor(barPrefab, true, true);
-        SetImagePivot(barPrefab, horizontal ? 0.5f : 0, horizontal ? 0 : 0.5f);
+        SetImagePivot(barPrefab, isHorizontal ? 0.5f : 0, isHorizontal ? 0 : 0.5f);
 
         //Instantiate first bar from prefab
         RawImage newImage1 = Instantiate(barPrefab, targetCanvas.transform);
@@ -574,8 +558,8 @@ public class ScreenEffects : MonoBehaviour
         newImage1.gameObject.SetActive(true);
 
         //Set initial and final positions
-        Vector2 image1TargetPosition = horizontal ? new Vector2(extents.x / 2, extents.y - (canvasProportionCovered * extents.y)) : new Vector2(extents.x - (canvasProportionCovered * extents.x), extents.y / 2);
-        Vector2 image1InitialPosition = horizontal ? new Vector2(extents.x / 2, extents.y) : new Vector2(extents.x, extents.y / 2);
+        Vector2 image1TargetPosition = isHorizontal ? new Vector2(extents.x / 2, extents.y - (canvasProportionCovered * extents.y)) : new Vector2(extents.x - (canvasProportionCovered * extents.x), extents.y / 2);
+        Vector2 image1InitialPosition = isHorizontal ? new Vector2(extents.x / 2, extents.y) : new Vector2(extents.x, extents.y / 2);
 
         //Instantiate first bar from prefab
         RawImage newImage2 = Instantiate(barPrefab, targetCanvas.transform);
@@ -584,20 +568,20 @@ public class ScreenEffects : MonoBehaviour
         newImage2.gameObject.SetActive(true);
 
         //Set initial and final positions
-        Vector2 image2TargetPosition = horizontal ? new Vector2(extents.x / 2, -(extents.y - (canvasProportionCovered * extents.y))) : new Vector2(-(extents.x - (canvasProportionCovered * extents.x)), extents.y / 2);
-        Vector2 image2InitialPosition = horizontal ? new Vector2(extents.x / 2, -extents.y) : new Vector2(-extents.x, extents.y / 2);
+        Vector2 image2TargetPosition = isHorizontal ? new Vector2(extents.x / 2, -(extents.y - (canvasProportionCovered * extents.y))) : new Vector2(-(extents.x - (canvasProportionCovered * extents.x)), extents.y / 2);
+        Vector2 image2InitialPosition = isHorizontal ? new Vector2(extents.x / 2, -extents.y) : new Vector2(-extents.x, extents.y / 2);
 
         //Lerp between initial and final positons
         float elapsedTime = 0f;
         float totalCurveTime = (animCurve == null) ? 0 : animCurve.keys[animCurve.length - 1].time;
         while (elapsedTime < time)
         {      
-            Vector2 start1 = entering ? image1InitialPosition : image1TargetPosition;
-            Vector2 end1 = entering ? image1TargetPosition : image1InitialPosition;
+            Vector2 start1 = isEntering ? image1InitialPosition : image1TargetPosition;
+            Vector2 end1 = isEntering ? image1TargetPosition : image1InitialPosition;
             float change1 = (start1 - end1).magnitude;
             
-            Vector2 start2 = entering ? image2InitialPosition : image2TargetPosition;
-            Vector2 end2 = entering ? image2TargetPosition : image2InitialPosition;
+            Vector2 start2 = isEntering ? image2InitialPosition : image2TargetPosition;
+            Vector2 end2 = isEntering ? image2TargetPosition : image2InitialPosition;
             float change2 = (start2 - end2).magnitude;
 
             if (animCurve == null)
@@ -623,8 +607,8 @@ public class ScreenEffects : MonoBehaviour
         }
 
         //Set final positions
-        newImage1.rectTransform.position = entering ? image1TargetPosition : image1InitialPosition;
-        newImage2.rectTransform.position = entering ? image2TargetPosition : image2InitialPosition;
+        newImage1.rectTransform.position = isEntering ? image1TargetPosition : image1InitialPosition;
+        newImage2.rectTransform.position = isEntering ? image2TargetPosition : image2InitialPosition;
 
         //Turn off effect
         effectActive = false;
@@ -634,7 +618,7 @@ public class ScreenEffects : MonoBehaviour
     //KEYHOLE
     //==============================
 
-    public static void Keyhole(Keyhole keyholePrefab, Transform target, float time, bool entering, Color colorTint, AnimationCurve animCurve, MonoBehaviour runOnInstance)
+    public static void Keyhole(Keyhole keyholePrefab, Transform targetTransform, Color colorTint, float time, AnimationCurve animCurve, MonoBehaviour runOnInstance, bool isEntering = true)
     {
         if (!effectActive)
         {
@@ -642,7 +626,7 @@ public class ScreenEffects : MonoBehaviour
             Initialise();
             Clear();
             effectActive = true;
-            runOnInstance.StartCoroutine(KeyholeCor(keyholePrefab, target, time, entering, colorTint, animCurve, runOnInstance));
+            runOnInstance.StartCoroutine(KeyholeCor(keyholePrefab, targetTransform, colorTint, time, animCurve, isEntering));
         }
         else
         {
@@ -650,7 +634,7 @@ public class ScreenEffects : MonoBehaviour
         }
     }
 
-    private static IEnumerator KeyholeCor(Keyhole keyholePrefab, Transform target, float time, bool entering, Color colorTint, AnimationCurve animCurve, MonoBehaviour runOnInstance)
+    private static IEnumerator KeyholeCor(Keyhole keyholePrefab, Transform targetTransform, Color colorTint, float time, AnimationCurve animCurve, bool isEntering)
     {
         //Play SFX here
 
@@ -661,7 +645,7 @@ public class ScreenEffects : MonoBehaviour
         Keyhole keyHole = Instantiate(keyholePrefab, targetCanvas.transform);
 
         //Position keyhole centered over target
-        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(target.position);
+        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(targetTransform.position);
         Vector2 screenPos = new Vector2((viewportPosition.x * extents.x) - (extents.x * 0.5f), (viewportPosition.y * extents.y) - (extents.y * 0.5f));
         keyHole.centre.rectTransform.localPosition = screenPos;
 
@@ -689,8 +673,8 @@ public class ScreenEffects : MonoBehaviour
         float maxWidth = 2 * maxDist;
             
         //Determine initial and final keyhole sizes
-        Vector2 initialSizeDelta = entering ? new Vector2(maxWidth, maxWidth) : Vector2.zero;
-        Vector2 finalSizeDelta = entering ? Vector2.zero : new Vector2(maxWidth, maxWidth);
+        Vector2 initialSizeDelta = isEntering ? new Vector2(maxWidth, maxWidth) : Vector2.zero;
+        Vector2 finalSizeDelta = isEntering ? Vector2.zero : new Vector2(maxWidth, maxWidth);
 
         //Compute magnitude of change
         float changeInSizeDeltaMagnitude = (finalSizeDelta - initialSizeDelta).magnitude;
@@ -730,7 +714,7 @@ public class ScreenEffects : MonoBehaviour
             yield return null;
         }
 
-        if (entering)
+        if (isEntering)
         {
             //Replace with solid color
             keyHole.gameObject.SetActive(false);
@@ -795,6 +779,18 @@ public class ScreenEffects : MonoBehaviour
         rawImage.rectTransform.pivot = new Vector2(pivotX, pivotY);
     }
 
+    private static IEnumerator EnterEffect(RawImage rawImage)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < 0.3f)
+        {
+            rawImage.rectTransform.localScale = Vector2.Lerp(Vector2.zero, Vector2.one, elapsedTime / 0.3f);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rawImage.rectTransform.localScale = Vector2.one;
+    }
 
     private static List<Vector2Int> DiagonallyTileRectangle(int xMax, int yMax)
     {
