@@ -65,7 +65,7 @@ public class ScreenEffects : MonoBehaviour
         //Get screen extents
         Vector2 extents = new Vector2(targetCanvas.pixelRect.width, targetCanvas.pixelRect.height);
 
-        //Compute a single tile
+        //Compute width of a single tile
         float tileWidth = extents.y / numberOfRows;
 
         //Compute number of columns with one extra to make sure screen is filled
